@@ -1,0 +1,93 @@
+---
+title: "Project About Earthquake Investigation"
+author: "Olivia Pan"
+date: "2022-09-19"
+output: html_document
+---
+
+```{r setup, include=FALSE, echo=F}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=F}
+Earthquake <- read.csv('Project1_earthquakes.csv')
+```
+
+# ***Introduction ***
+  The set of data collected from past month about earthquakes in the US is obtained from link: [United States Geological Survey](https://www.usgs.gov/programs/earthquake-hazards/earthquakes), an official website of the United States government. Its purpose is to provide science about the natural hazards that threaten lives and livelihoods. Also, it has scientists developing new methods and tools to enable timely information about the Earth.
+  
+   The variables the dataset contains include "id", which is the unique name for earthquakes.
+   
+   Variable "impact.gap", variable ranging from 0 to 180 representing the accuracy of the horizontal position of the earthquake presented. Also, it shows the area size and depth of the earthquake. 
+   
+   Variable "impact.magnitude" shows the size of earthquakes at their sources. It also indicates the energy released in earthquakes: larger the number is, more powerful the earthquake is.
+   
+  Variable "impact.significance" shows the significance of events, and bigger numbers bind with more significant events. They are integers from 0 to 1000.
+  
+  Variable "location.depth" indicates the depth of earthquakes in kilometers. 
+  
+  Variable "location.distance" reports the rough distance earthquakes occur away from the reporting station.
+  
+  String variable "location.full" indicates the full name of the location.
+  
+  Another string variable "location.name" indicates the name of the states earthquakes are reported in.
+  Variable location.latitude tells the latitude of events on the globe.
+  
+  Numeric variable "location.longitude" shows the decimal degrees longtude on the globe.
+  
+  Variables that indicate the time events occurred include "time.day" which shows the day of the month, "time.full" which shows the full date/time, "time.hour", "time.minute", "time.month", "time.second", "time.year" which are digits showing the time earthquakes happened. 
+  
+  Finally, variable "time.epoch" shows the time since each earthquake occurred.
+  
+  The outcome variable the article is going to investigate in is "impact.significance", and the 3 predictor variables are "impact.magnitude", "location.depth", and "location.distance".
+  
+  ![](eq3.png)
+  Earle, S., &amp; Earle, S. (2015, September 1). 11.4 the impacts of earthquakes. Physical Geology. Retrieved September 21, 2022, from https://opentextbc.ca/geology/chapter/11-4-the-impacts-of-earthquakes/ 
+
+
+
+# ***Question2***
+  This is the histogram showing the distribution of the outcome variable "impact.significance".
+```{r echo=F, warning=F}
+library(ggplot2)
+eq_ggplot <- ggplot(Earthquake)
+eq_ggplot + geom_histogram(aes(x=impact.significance), binwidth=100) + labs(title='Histogram of variable impact.significance', x='Distribution of impact.significance', y='Frequency') + xlim(c(0,1000)) + ylim(c(0,1400))
+```
+  
+  The graph is skewed to the right because it has small tail to the right, and most of its distribution is relatively to the left. The median of the distribution is `r median(Earthquake$impact.significance)`. the Q1 of the variable "impact.significance" is `r quantile(Earthquake$impact.significance)[2]`, and the Q3 is `r quantile(Earthquake$impact.significance)[4]`.
+  
+
+# ***Question3***
+
+## *1. Relationship between predictor magnitude of earthquakes and output significance of earthquakes*
+  
+```{r echo=F, warning=F}
+eq_ggplot + geom_point(aes(x=impact.magnitude,y=impact.significance)) + labs(title='Scatterplot of magnitude and significance in earthquakes', y='Distribution of significance', x='Distribution of magnitude')
+```
+  
+  As shown in the graph above, the relationship between magnitude and significance of earthquakes is highly correlated because their slope seems to be positive and linear, with their correlation coefficient being `r round(cor(Earthquake$impact.significance, Earthquake$impact.magnitude), digits=2)`. Its correlation is very close to 1, indicating the strong and positive relationship between magnitude and significance.
+  
+## *2. The relationship between significance of earthquakes and depth of earthquakes in kilometers*
+  
+```{r echo=F, warning=F}
+eq_ggplot + geom_point(aes(x=location.depth,y=impact.significance)) + labs(title='Scatterplot of significance and depths in earthquakes', y='Distribution of significance', x='Depth of events in kilometers')
+```
+  
+  The graph shows an unclear pattern: the dots are clumped in corners to bottom left and bottom right. Also the correlation coefficient is `r round(cor(Earthquake$impact.significance, Earthquake$location.depth), digits=2)`, which is positive but not close to 1, indicating a positive but weak relationship between significance and earthquake's depth.
+  
+##  *3. Relationship between significance and distance earthquakes occurred away from the reporting station*
+```{r echo=F, warning=F}
+eq_ggplot + geom_point(aes(x=location.distance,y=impact.significance)) + labs(title='Scatterplot of affecting distance and significance in earthquakes', y='Distribution of significance', x='Distribution of location distances')
+```
+                        
+  According to the graph, the relationship between event significance and affected distance away from the reporting station is not related because dots are condensed in the bottom left corner, and the others form a vague horizontal line across the graph. The correlation coefficient of their relationship is `r round(cor(Earthquake$impact.significance, Earthquake$location.distance), digits=2)`. Even though the coefficient is positive, it is still far away from 1, which means that event significance and location distance from reported location have positive relationship but relatively weak relationship.                          
+  
+# ***Summary***
+  Based on the finding above, the output variable "impact.significance" has strong and positive relationship with "impact.magnitude" but positive and weak relationship with "location.depth" and "location.distance". We suggest to investigate into the relationship between significance of earthquake events and magnitude of events: does magnitude of earthquakes lead to bigger significance. 
+
+# ***Reference***
+Earthquakes. Earthquakes | U.S. Geological Survey. (n.d.). Retrieved September 23, 2022, from https://www.usgs.gov/programs/earthquake-hazards/earthquakes 
+                                                                          
+  
+  
+
